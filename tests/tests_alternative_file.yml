@@ -12,6 +12,8 @@
         AcceptEnv: LANG
         Banner: /etc/issue
         Ciphers: aes256-gcm@openssh.com
+        HostKey:
+          - /tmp/ssh_host_ed25519_key
 
   - name: Verify the options are correctly set
     block:
@@ -27,4 +29,5 @@
             - "'AcceptEnv LANG' in config.stdout"
             - "'Banner /etc/issue' in config.stdout"
             - "'Ciphers aes256-gcm@openssh.com' in config.stdout"
+            - "'HostKey /tmp/ssh_host_ed25519_key' in config.stdout"
     tags: tests::verify
