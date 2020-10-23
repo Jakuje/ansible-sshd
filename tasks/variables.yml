@@ -72,7 +72,7 @@
             {{ sshd_hostkey }}
           {% elif sshd['HostKey'] is defined %}
             {{ sshd['HostKey'] }}
-          {% elif __sshd_defaults['HostKey'] is defined and sshd_skip_defaults != true %}
+          {% elif __sshd_defaults['HostKey'] is defined and not sshd_skip_defaults %}
             {{ __sshd_defaults['HostKey'] }}
           {% else %}
             {{ __sshd_verify_hostkeys }}
