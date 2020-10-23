@@ -9,17 +9,6 @@
     name: "{{ sshd_packages }}"
     state: present
 
-- name: Configuration
-  template:
-    src: sshd_config.j2
-    dest: "{{ sshd_config_file }}"
-    owner: "{{ sshd_config_owner }}"
-    group: "{{ sshd_config_group }}"
-    mode: "{{ sshd_config_mode }}"
-    validate: "{{ sshd_binary }} -t -f %s"
-    backup: "{{ sshd_backup }}"
-  notify: reload_sshd
-
 - name: Sysconfig configuration
   template:
     src: sysconfig.j2
@@ -30,6 +19,33 @@
     backup: "{{ sshd_backup }}"
   when:
     - sshd_sysconfig|bool
+  notify: reload_sshd
+
+- name: Make sure hostkeys are available
+  shell: |
+    {% if sshd_sysconfig %} source /etc/sysconfig/sshd; {% endif %}
+    ssh-keygen -q -t {{ item | regex_search('(rsa|dsa|ecdsa|ed25519)') }} -f {{ item }} -C '' -N ''
+  args:
+    creates: "{{ item }}"
+  loop: "{{ sshd_verify_hostkeys | from_yaml }}"
+
+- name: Make sure private hostkeys have expected permissions
+  file:
+    path: "{{ item }}"
+    owner: "{{ sshd_hostkey_owner }}"
+    group: "{{ sshd_hostkey_group }}"
+    mode: "{{ sshd_hostkey_mode }}"
+  loop: "{{ sshd_verify_hostkeys | from_yaml }}"
+
+- name: Apply configuration
+  template:
+    src: sshd_config.j2
+    dest: "{{ sshd_config_file }}"
+    owner: "{{ sshd_config_owner }}"
+    group: "{{ sshd_config_group }}"
+    mode: "{{ sshd_config_mode }}"
+    validate: "{{ sshd_binary }} -t -f %s"
+    backup: "{{ sshd_backup }}"
   notify: reload_sshd
 
 - name: Install systemd service files

@@ -36,6 +36,7 @@ sshd_sysconfig_override_crypto_policy: false
 # This is not recommended to enable if you do not have hadware random generator
 sshd_sysconfig_use_strong_rng: 0
 
+
 # Empty dicts to avoid errors
 sshd: {}
 
@@ -51,6 +52,15 @@ __sshd_config_mode: "0600"
 __sshd_config_file: /etc/ssh/sshd_config
 __sshd_binary: /usr/sbin/sshd
 __sshd_service: sshd
+
+# This lists by default all hostkeys as rendered in the generated configuration
+# file. Before attempting to run sshd (either for verification of configuration
+# or restarting), we make sure the keys exist and have correct permissions. To
+# disable this check, set sshd_verify_hostkeys to []
+__sshd_verify_hostkeys: []
+__sshd_hostkey_owner: root
+__sshd_hostkey_group: root
+__sshd_hostkey_mode: "0600"
 
 ### These variables are used by role internals and should not be used.
 __sshd_sftp_server: /usr/lib/openssh/sftp-server

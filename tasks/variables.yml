@@ -64,3 +64,28 @@
       set_fact:
         sshd_sysconfig: "{{ __sshd_sysconfig }}"
       when: sshd_sysconfig is not defined
+    - name: Define sshd_verify_hostkeys
+      set_fact:
+        # This mimics the macro body_option() in sshd_config.j2
+        sshd_verify_hostkeys: >
+          {% if sshd_HostKey is defined %}
+            {{ sshd_hostkey }}
+          {% elif sshd['HostKey'] is defined %}
+            {{ sshd['HostKey'] }}
+          {% elif __sshd_defaults['HostKey'] is defined and sshd_skip_defaults != true %}
+            {{ __sshd_defaults['HostKey'] }}
+          {% else %}
+            {{ __sshd_verify_hostkeys }}
+          {% endif %}
+      when: sshd_verify_hostkeys is not defined
+    - name: Define sshd_hostkey_owner
+      set_fact:
+        sshd_hostkey_owner: "{{ __sshd_hostkey_owner }}"
+      when: sshd_hostkey_owner is not defined
+    - name: Define sshd_hostkey_group
+      set_fact:
+        sshd_hostkey_group: "{{ __sshd_hostkey_group }}"
+      when: sshd_hostkey_group is not defined
+    - name: Define sshd_hostkey_mode
+      set_fact:
+        sshd_hostkey_mode: "{{ __sshd_hostkey_mode }}"
