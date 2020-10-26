@@ -3,7 +3,7 @@ Description=OpenBSD Secure Shell server per-connection daemon
 After=auditd.service
 
 [Service]
-ExecStart=-{{ sshd_binary }} -i -f {{ sshd_config_file }}
+ExecStart=-{{ sshd_binary }} -i -f {{ __sshd_config_file }}
 StandardInput=socket
 RuntimeDirectory={{ sshd_binary }}
 RuntimeDirectoryMode=0755

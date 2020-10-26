@@ -27,7 +27,7 @@
     ssh-keygen -q -t {{ item | regex_search('(rsa|dsa|ecdsa|ed25519)') }} -f {{ item }} -C '' -N ''
   args:
     creates: "{{ item }}"
-  loop: "{{ sshd_verify_hostkeys | from_yaml }}"
+  loop: "{{ __sshd_verify_hostkeys | from_yaml }}"
 
 - name: Make sure private hostkeys have expected permissions
   file:
@@ -35,12 +35,12 @@
     owner: "{{ sshd_hostkey_owner }}"
     group: "{{ sshd_hostkey_group }}"
     mode: "{{ sshd_hostkey_mode }}"
-  loop: "{{ sshd_verify_hostkeys | from_yaml }}"
+  loop: "{{ __sshd_verify_hostkeys | from_yaml }}"
 
 - name: Apply configuration
   template:
     src: sshd_config.j2
-    dest: "{{ sshd_config_file }}"
+    dest: "{{ __sshd_config_file }}"
     owner: "{{ sshd_config_owner }}"
     group: "{{ sshd_config_group }}"
     mode: "{{ sshd_config_mode }}"

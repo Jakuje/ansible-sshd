@@ -3,7 +3,7 @@ Description=OpenBSD Secure Shell server
 
 [Service]
 ExecStartPre={{ sshd_binary }} -t
-ExecStart={{ sshd_binary }} -D -f {{ sshd_config_file }}
+ExecStart={{ sshd_binary }} -D -f {{ __sshd_config_file }}
 ExecReload={{ sshd_binary }} -t
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process

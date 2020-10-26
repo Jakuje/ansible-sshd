@@ -46,8 +46,8 @@
       when: sshd_config_mode is not defined
     - name: Define sshd_config_file
       set_fact:
-        sshd_config_file: "{{ __sshd_config_file }}"
-      when: sshd_config_file is not defined
+        __sshd_config_file: "{{ sshd_config_file }}"
+      when: sshd_config_file is defined
     - name: Define sshd_binary
       set_fact:
         sshd_binary: "{{ __sshd_binary }}"
@@ -67,8 +67,10 @@
     - name: Define sshd_verify_hostkeys
       set_fact:
         # This mimics the macro body_option() in sshd_config.j2
-        sshd_verify_hostkeys: >
-          {% if sshd_HostKey is defined %}
+        __sshd_verify_hostkeys: >
+          {% if sshd_verify_hostkeys is defined %}
+            {{ sshd_verify_hostkeys }}
+          {% elif sshd_HostKey is defined %}
             {{ sshd_hostkey }}
           {% elif sshd['HostKey'] is defined %}
             {{ sshd['HostKey'] }}
@@ -77,7 +79,6 @@
           {% else %}
             {{ __sshd_verify_hostkeys }}
           {% endif %}
-      when: sshd_verify_hostkeys is not defined
     - name: Define sshd_hostkey_owner
       set_fact:
         sshd_hostkey_owner: "{{ __sshd_hostkey_owner }}"
