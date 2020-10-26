@@ -28,6 +28,16 @@
         HostKey:
           - /tmp/ssh_host_rsa_key
       sshd_MaxStartups: 100
+  - name: Now configure the main sshd_config file
+    include_role:
+      name: ansible-sshd
+    vars:
+      sshd:
+        Banner: /etc/issue
+        Ciphers: aes128-ctr
+        HostKey:
+          - /tmp/ssh_host_ecdsa_key
+      sshd_PasswordAuthentication: no
 
   - name: Verify the options are correctly set
     block:
@@ -40,6 +50,10 @@
       - name: Print second configuration file
         command: cat /etc/ssh/sshd_config_custom_second
         register: config2
+
+      - name: Print the main configuration file
+        command: cat /etc/ssh/sshd_config
+        register: config3
 
       - name: Check content of first configuration file
         assert:
@@ -59,4 +73,14 @@
             - "'HostKey /tmp/ssh_host_rsa_key' in config2.stdout"
             - "'MaxStartups 100' in config2.stdout"
             - "'Compression no' not in config2.stdout"
+
+      - name: Check content of the main configuration file
+        assert:
+          that:
+            - "'Banner /etc/issue' in config3.stdout"
+            - "'Ciphers aes128-ctr' in config3.stdout"
+            - "'HostKey /tmp/ssh_host_ecdsa_key' in config3.stdout"
+            - "'PasswordAuthentication no' in config3.stdout"
+            - "'MaxStartups 100' not in config3.stdout"
+            - "'Compression no' not in config3.stdout"
     tags: tests::verify
