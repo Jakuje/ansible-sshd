@@ -14,6 +14,20 @@
         Ciphers: aes256-gcm@openssh.com
         HostKey:
           - /tmp/ssh_host_ed25519_key
+      sshd_Compression: no
+  - name: Configure second alternative sshd_config file
+    include_role:
+      name: ansible-sshd
+    vars:
+      # just anything -- will not get processed by sshd
+      sshd_config_file: /etc/ssh/sshd_config_custom_second
+      sshd_skip_defaults: true
+      sshd:
+        Banner: /etc/issue2
+        Ciphers: aes128-gcm@openssh.com
+        HostKey:
+          - /tmp/ssh_host_rsa_key
+      sshd_MaxStartups: 100
 
   - name: Verify the options are correctly set
     block:
@@ -23,11 +37,26 @@
         command: cat /etc/ssh/sshd_config_custom
         register: config
 
-      - name: Check the options are in configuration file
+      - name: Print second configuration file
+        command: cat /etc/ssh/sshd_config_custom_second
+        register: config2
+
+      - name: Check content of first configuration file
         assert:
           that:
             - "'AcceptEnv LANG' in config.stdout"
             - "'Banner /etc/issue' in config.stdout"
             - "'Ciphers aes256-gcm@openssh.com' in config.stdout"
             - "'HostKey /tmp/ssh_host_ed25519_key' in config.stdout"
+            - "'Compression no' in config.stdout"
+            - "'MaxStartups 100' not in config.stdout"
+
+      - name: Check content of second configuration file
+        assert:
+          that:
+            - "'Banner /etc/issue2' in config2.stdout"
+            - "'Ciphers aes128-gcm@openssh.com' in config2.stdout"
+            - "'HostKey /tmp/ssh_host_rsa_key' in config2.stdout"
+            - "'MaxStartups 100' in config2.stdout"
+            - "'Compression no' not in config2.stdout"
     tags: tests::verify
