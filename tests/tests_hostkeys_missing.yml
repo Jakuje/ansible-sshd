@@ -10,7 +10,7 @@
           sshd_verify_hostkeys: []
           sshd:
             HostKey:
-              - /tmp/ssh_host_rsa_key
+              - /tmp/missing_ssh_host_rsa_key
         register: role_result
 
       - name: unreachable task
