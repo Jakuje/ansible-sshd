@@ -54,10 +54,10 @@ sshd_binary: /usr/sbin/sshd
 sshd_service: sshd
 
 # This lists by default all hostkeys as rendered in the generated configuration
-# file. Before attempting to run sshd (either for verification of configuration
-# or restarting), we make sure the keys exist and have correct permissions. To
-# disable this check, set sshd_verify_hostkeys to []
-sshd_verify_hostkeys: []
+# file ("auto"). Before attempting to run sshd (either for verification of
+# configuration or restarting), we make sure the keys exist and have correct
+# permissions. To disable this check, set sshd_verify_hostkeys to false
+sshd_verify_hostkeys: "auto"
 sshd_hostkey_owner: root
 sshd_hostkey_group: root
 sshd_hostkey_mode: "0600"

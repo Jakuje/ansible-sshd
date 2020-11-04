@@ -185,10 +185,12 @@ used.
 
 * `sshd_verify_hostkeys`
 
-This list contains all the host keys that are present in the produced
-configuration file. They are checked for presence and generated if missing to
-make sure the service is able to start on the first attempt. To disable this
-check, set this to empty list.
+By default (*auto*), this list contains all the host keys that are present in
+the produced configuration file. The paths are checked for presence and
+generated if missing. Additionally, permissions and file owners are set to sane
+defailts. This is useful if the role is used in deploument stage to make sure
+the service is able to start on the first attempt. To disable this check, set
+this to empty list.
 
 * `sshd_hostkey_owner`, `sshd_hostkey_group`, `sshd_hostkey_group`
 
