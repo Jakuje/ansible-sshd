@@ -18,7 +18,7 @@
       - meta: flush_handlers
 
       - name: Print current configuration file
-        command: cat /etc/ssh/sshd_config
+        command: "cat {{ sshd_config_file }}"
         register: config
 
       - stat:

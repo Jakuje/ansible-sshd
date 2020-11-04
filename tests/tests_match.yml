@@ -44,7 +44,7 @@
         register: root_effective
 
       - name: Print current configuration file
-        command: cat /etc/ssh/sshd_config
+        command: "cat {{ sshd_config_file }}"
         register: config
 
       - name: Check the options are effective

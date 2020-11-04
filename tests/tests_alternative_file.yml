@@ -52,7 +52,7 @@
         register: config2
 
       - name: Print the main configuration file
-        command: cat /etc/ssh/sshd_config
+        command: "cat {{ sshd_config_file }}"
         register: config3
 
       - name: Check content of first configuration file
