@@ -8,6 +8,9 @@
       sshd_sysconfig: true
       sshd_sysconfig_override_crypto_policy: true
       sshd_sysconfig_use_strong_rng: 32
+      # For Fedora
+      sshd_config_file: /etc/ssh/sshd_config
+      sshd_skip_defaults: false
 
   - name: Verify the options are correctly set
     block:
