@@ -12,8 +12,6 @@
         AcceptEnv: LANG
         Banner: /etc/issue
         Ciphers: aes256-gcm@openssh.com
-        HostKey:
-          - /tmp/ssh_host_ed25519_key
       sshd_Compression: no
   - name: Configure second alternative sshd_config file
     include_role:
@@ -25,8 +23,6 @@
       sshd:
         Banner: /etc/issue2
         Ciphers: aes128-gcm@openssh.com
-        HostKey:
-          - /tmp/ssh_host_rsa_key
       sshd_MaxStartups: 100
   - name: Now configure the main sshd_config file
     include_role:
@@ -68,7 +64,7 @@
             - "'AcceptEnv LANG' in config.stdout"
             - "'Banner /etc/issue' in config.stdout"
             - "'Ciphers aes256-gcm@openssh.com' in config.stdout"
-            - "'HostKey /tmp/ssh_host_ed25519_key' in config.stdout"
+            - "'HostKey' not in config.stdout"
             - "'Compression no' in config.stdout"
             - "'MaxStartups 100' not in config.stdout"
 
@@ -77,7 +73,7 @@
           that:
             - "'Banner /etc/issue2' in config2.stdout"
             - "'Ciphers aes128-gcm@openssh.com' in config2.stdout"
-            - "'HostKey /tmp/ssh_host_rsa_key' in config2.stdout"
+            - "'HostKey' not in config2.stdout"
             - "'MaxStartups 100' in config2.stdout"
             - "'Compression no' not in config2.stdout"
 
