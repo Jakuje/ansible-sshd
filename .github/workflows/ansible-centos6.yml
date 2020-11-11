@@ -1,0 +1,16 @@
+name: Run tests on CentOS 6
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: ansible check with centos:6
+      uses: roles-ansible/check-ansible-centos-centos6-action@master
+      with:
+        group: local
+        hosts: localhost
+        targets: "tests/*.yml"
