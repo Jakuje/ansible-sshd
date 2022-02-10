@@ -3,7 +3,21 @@ name: Run tests on Fedora latest
 on: [push, pull_request]
 
 jobs:
-  build:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      # Important: This sets up your GITHUB_WORKSPACE environment variable
+      - name: checkout PR
+        uses: actions/checkout@v2
+
+      - name: ansible check with fedora:latest
+        uses: roles-ansible/check-ansible-fedora-latest-action@master
+        with:
+          group: local
+          hosts: localhost
+          targets: "tests/tests_*.yml --check"
+
+  tests:
     runs-on: ubuntu-latest
     steps:
       # Important: This sets up your GITHUB_WORKSPACE environment variable
